@@ -5,11 +5,11 @@ export function cleanInput(input: string): string[] {
   return input.split(' ').filter((word) => word.length);
 }
 
-export function startREPL(state: State) {
+export async function startREPL(state: State) {
   const { rl } = state;
   rl.prompt();
 
-  rl.on('line', (input) => {
+  rl.on('line', async (input) => {
     const words = cleanInput(input);
 
     if (words.length === 0) {
@@ -21,7 +21,11 @@ export function startREPL(state: State) {
 
     const commands = getCommands();
     if (commands[command]) {
-      commands[command].callback(state);
+      try {
+        await commands[command].callback(state);
+      } catch (error) {
+        console.log(`${commands[command].name} command failed.`);
+      }
     } else {
       console.log(`Unknown command.`);
     }

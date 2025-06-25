@@ -2,16 +2,20 @@ import { type Interface } from 'readline';
 import { stdin, stdout } from 'node:process';
 import { createInterface } from 'node:readline';
 import { getCommands } from './command.js';
+import { PokeAPI } from './pokeapi.js';
 
 export type CLICommand = {
   name: string;
   description: string;
-  callback: (state: State) => void;
+  callback: (state: State) => Promise<void>;
 };
 
 export type State = {
   rl: Interface;
   commands: Record<string, CLICommand>;
+  pokeapi: PokeAPI;
+  nextLocationURL: string | null;
+  prevLocationURL: string | null;
 };
 
 export function initSate(): State {
@@ -25,5 +29,8 @@ export function initSate(): State {
   return {
     rl,
     commands,
+    pokeapi: new PokeAPI(),
+    nextLocationURL: 'https://pokeapi.co/api/v2/location-area',
+    prevLocationURL: null,
   };
 }
