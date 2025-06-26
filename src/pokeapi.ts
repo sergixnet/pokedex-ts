@@ -5,17 +5,37 @@ export class PokeAPI {
 
   async fetchLocations(pageURL?: string): Promise<ShallowLocations> {
     const url = pageURL ?? `${PokeAPI.baseURL}/location-area`;
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Error fetching locations: ${response.status}`);
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Error fetching locations: ${response.status}`);
+      }
+      const location: ShallowLocations = await response.json();
+      return location;
+    } catch (error) {
+      throw new Error(`${(error as Error).message}`);
     }
-    const json = await response.json();
-    return json;
   }
 
-  //   async fetchLocation(locationName: string): Promise<Location> {
-  //     // implement this
-  //   }
+  async fetchLocation(locationName: string): Promise<Location> {
+    const url = `${PokeAPI.baseURL}/location-area/${locationName}`;
+
+    try {
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(
+          `Error fetching location ${locationName}: ${response.status}`
+        );
+      }
+
+      const location: Location = await response.json();
+      return location;
+    } catch (error) {
+      throw new Error(`${(error as Error).message}`);
+    }
+  }
 }
 
 export type ShallowLocations = {
