@@ -18,7 +18,7 @@ export type State = {
   prevLocationURL: string | null;
 };
 
-export function initSate(): State {
+export function initSate(cacheInterval: number): State {
   const rl = createInterface({
     input: stdin,
     output: stdout,
@@ -29,7 +29,7 @@ export function initSate(): State {
   return {
     rl,
     commands,
-    pokeapi: new PokeAPI(),
+    pokeapi: new PokeAPI(cacheInterval),
     nextLocationURL: 'https://pokeapi.co/api/v2/location-area',
     prevLocationURL: null,
   };
