@@ -4,7 +4,7 @@ export async function commandExplore(state: State, ...args: string[]) {
   const [location, ...other] = args;
 
   if (!location || other.length) {
-    console.log('Usage: explore <location-name>');
+    console.log('Usage: explore <location_name>');
     return;
   }
 
