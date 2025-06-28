@@ -17,14 +17,15 @@ export async function startREPL(state: State) {
       return;
     }
 
-    const command = words[0];
+    const [command, ...args] = words;
 
     const commands = getCommands();
     if (commands[command]) {
       try {
-        await commands[command].callback(state);
+        await commands[command].callback(state, ...args);
       } catch (error) {
         console.log(`${commands[command].name} command failed.`);
+        console.log(`${(error as Error).message}`);
       }
     } else {
       console.log(`Unknown command.`);
