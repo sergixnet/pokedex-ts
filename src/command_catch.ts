@@ -34,6 +34,7 @@ export async function commandCatch(state: State, ...args: string[]) {
       url: `https://pokeapi.co/api/v2/pokemon/${name}`,
     };
     console.log(`${name} was caught!`);
+    console.log('You may now inspect it with the inspect command.');
   } else {
     console.log(`${name} escaped!`);
   }
