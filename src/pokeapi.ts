@@ -1,4 +1,6 @@
 import { Cache } from './pokecache.js';
+import { ShallowLocations, Location } from './pokeapi-types/locations.js';
+import { PokemonInfo } from './pokeapi-types/pokemon-info.js';
 
 export class PokeAPI {
   private static readonly baseURL = 'https://pokeapi.co/api/v2';
@@ -52,93 +54,28 @@ export class PokeAPI {
       throw new Error(`${(error as Error).message}`);
     }
   }
-}
 
-export type ShallowLocations = {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: {
-    name: string;
-    url: string;
-  }[];
-};
+  async fetchPokemonInfo(name: string) {
+    const url = `${PokeAPI.baseURL}/pokemon/${name}`;
+    const pokemonInfo = this.#cache.get(url);
 
-export interface Location {
-  encounter_method_rates: EncounterMethodRate[];
-  game_index: number;
-  id: number;
-  location: ShallowLocation;
-  name: string;
-  names: Name[];
-  pokemon_encounters: PokemonEncounter[];
-}
+    if (pokemonInfo) {
+      return pokemonInfo as PokemonInfo;
+    }
 
-export interface EncounterMethodRate {
-  encounter_method: EncounterMethod;
-  version_details: VersionDetail[];
-}
+    try {
+      const response = await fetch(url);
 
-export interface EncounterMethod {
-  name: string;
-  url: string;
-}
+      if (!response.ok) {
+        throw new Error(
+          `Error fetching pokemon info of ${name}: ${response.status}`
+        );
+      }
 
-export interface VersionDetail {
-  rate: number;
-  version: Version;
-}
-
-export interface Version {
-  name: string;
-  url: string;
-}
-
-export interface ShallowLocation {
-  name: string;
-  url: string;
-}
-
-export interface Name {
-  language: Language;
-  name: string;
-}
-
-export interface Language {
-  name: string;
-  url: string;
-}
-
-export interface PokemonEncounter {
-  pokemon: Pokemon;
-  version_details: VersionDetail2[];
-}
-
-export interface Pokemon {
-  name: string;
-  url: string;
-}
-
-export interface VersionDetail2 {
-  encounter_details: EncounterDetail[];
-  max_chance: number;
-  version: Version2;
-}
-
-export interface EncounterDetail {
-  chance: number;
-  condition_values: any[];
-  max_level: number;
-  method: Method;
-  min_level: number;
-}
-
-export interface Method {
-  name: string;
-  url: string;
-}
-
-export interface Version2 {
-  name: string;
-  url: string;
+      const pokemon: PokemonInfo = await response.json();
+      return pokemon;
+    } catch (error) {
+      throw new Error(`${(error as Error).message}`);
+    }
+  }
 }
