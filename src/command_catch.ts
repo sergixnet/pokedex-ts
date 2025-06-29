@@ -29,7 +29,7 @@ export async function commandCatch(state: State, ...args: string[]) {
   const experience = pokemonInfo.base_experience;
 
   if (tryToCatchPokemon(experience)) {
-    state.pokedex[name] = {
+    state.caughtPokemon[name] = {
       name,
       url: `https://pokeapi.co/api/v2/pokemon/${name}`,
     };

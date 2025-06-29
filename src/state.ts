@@ -17,7 +17,7 @@ export type State = {
   pokeapi: PokeAPI;
   nextLocationURL: string | null;
   prevLocationURL: string | null;
-  pokedex: Record<string, Pokemon>;
+  caughtPokemon: Record<string, Pokemon>;
 };
 
 export function initSate(cacheInterval: number): State {
@@ -34,6 +34,6 @@ export function initSate(cacheInterval: number): State {
     pokeapi: new PokeAPI(cacheInterval),
     nextLocationURL: 'https://pokeapi.co/api/v2/location-area',
     prevLocationURL: null,
-    pokedex: {},
+    caughtPokemon: {},
   };
 }
